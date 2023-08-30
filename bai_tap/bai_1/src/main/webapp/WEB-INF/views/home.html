@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+
+<a href="/add">ADD NEW SONG</a>
+
+<table border="10" cellpadding="10" cellspacing="10">
+	<thead>
+	<tr>
+		<th>STT</th>
+		<th>NAME</th>
+		<th>AUTHOR</th>
+		<th>GENRE</th>
+		<th>SOUND</th>
+		<th>STATUS</th>
+		<th colspan="2">ACTIONS</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr th:each="item,loop:${sounds}">
+		<th th:text="${loop.count}"></th>
+		<td th:text="${item.name}"></td>
+		<td th:text="${item.author}"></td>
+		<td th:text="${item.genre}"></td>
+		<td>
+			<audio controls autoplay muted th:src="@{|/sound/${item.url}|}"></audio>
+		</td>
+		<td th:text="${item.status}?'Đang bán':'Hết hàng'"></td>
+		<td><a th:href="@{|/edit/${item.id}|}">EDIT</a></td>
+		<td><a th:href="@{|/delete/${item.id}|}">DELETE</a></td>
+	</tr>
+	</tbody>
+</table>
+
+</body>
+</html>
