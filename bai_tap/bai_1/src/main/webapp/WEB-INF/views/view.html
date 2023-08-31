@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<a href="/">Quay Lại</a>
+
+<table>
+	<tr>
+		<td>Title</td>
+		<td th:text="${blog.title}"></td>
+	</tr>
+	<tr>
+		<td>Content</td>
+		<td th:text="${blog.content}"></td>
+	</tr>
+</table>
+</body>
+</html>
