@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<a href="/">Quay Lại</a>
+<table>
+	<thead>
+	<tr>
+		<td>STT</td>
+		<td>Category</td>
+		<td>Actions</td>
+	</tr>
+	</thead>
+	<tbody>
+	<tr th:each="c,loop:${categories}">
+		<td th:text="${loop.count}"></td>
+		<td th:text="${c.name}"></td>
+		<td><a th:href="@{|/category/delete/${c.id}|}">Delete</a></td>
+	</tr>
+	</tbody>
+</table>
+</body>
+</html>

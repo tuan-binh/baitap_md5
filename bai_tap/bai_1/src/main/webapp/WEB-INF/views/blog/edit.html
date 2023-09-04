@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<a href="/">Quay Lại</a>
+<form action="/edit" method="post" th:object="${blog}">
+	<table>
+		<tr>
+			<td>Id: </td>
+			<td><input type="text" th:field="*{id}" readonly/></td>
+		</tr>
+		<tr>
+			<td>Title:</td>
+			<td><input type="text" th:field="*{title}"></td>
+		</tr>
+		<tr>
+			<td>Content: </td>
+			<td><input type="text" th:field="*{content}"></td>
+		</tr>
+		<tr>
+			<select th:field="*{category}">
+				<option th:each="cate:${categories}" th:value="${cate.id}" th:text="${cate.name}"></option>
+			</select>
+		</tr>
+		<tr>
+			<td colspan="2"><button type="submit">UPDATE</button></td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>

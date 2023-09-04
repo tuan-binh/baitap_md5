@@ -9,5 +9,5 @@ import rikkei.academy.model.Province;
 
 @Repository
 public interface ICustomerRepository extends PagingAndSortingRepository<Customer, Long> {
-    Page<Customer> findAllByFirstNameContaining(String firstname, Pageable pageable);
+	Page<Customer> findAllByFirstNameContaining(String firstname, Pageable pageable);
 }

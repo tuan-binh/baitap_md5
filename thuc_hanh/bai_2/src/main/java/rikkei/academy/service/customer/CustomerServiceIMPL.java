@@ -3,12 +3,14 @@ package rikkei.academy.service.customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import rikkei.academy.model.Customer;
 import rikkei.academy.model.Province;
 import rikkei.academy.repository.ICustomerRepository;
 
 import java.util.Optional;
 
+@Service
 public class CustomerServiceIMPL implements ICustomerService{
     @Autowired
     private ICustomerRepository customerRepository;

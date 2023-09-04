@@ -1,6 +1,7 @@
-package rikkei.academy.config;
+package ra.config;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -8,8 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.web.config.EnableSpringDataWebSupport;
-import org.springframework.format.FormatterRegistry;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -23,13 +22,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
-import rikkei.academy.formatter.ProvinceFormatter;
-import rikkei.academy.repository.ICustomerRepository;
-import rikkei.academy.service.customer.CustomerServiceIMPL;
-import rikkei.academy.service.customer.ICustomerService;
-import rikkei.academy.service.province.IProvinceService;
-import rikkei.academy.service.province.ProvinceServiceIMPL;
-
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -37,25 +29,34 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
+@EnableTransactionManagement // Hỗ trợ quản lý giao dịnh
 @EnableWebMvc
-@EnableTransactionManagement
-@ComponentScan("rikkei.academy")
-@EnableJpaRepositories("rikkei.academy.repository")
-@EnableSpringDataWebSupport
-public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
+@ComponentScan(basePackages = {"ra"})
+@EnableJpaRepositories("ra.model.repository")
+public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
+	
 	private ApplicationContext applicationContext;
 	
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
+
+//	cấu hình viewResolver JSP
+//	@Bean
+//	public ViewResolver viewResolver() {
+//		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+//		resolver.setPrefix("/WEB-INF/views/");
+//		resolver.setSuffix(".jsp");
+//		return resolver;
+//	}
 	
 	//Cấu hình Thymleaf
 	@Bean
 	public SpringResourceTemplateResolver templateResolver() {
 		SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
 		templateResolver.setApplicationContext(applicationContext);
-		templateResolver.setPrefix("/WEB-INF/views");
+		templateResolver.setPrefix("/WEB-INF/views/");
 		templateResolver.setSuffix(".html");
 		templateResolver.setTemplateMode(TemplateMode.HTML);
 		templateResolver.setCharacterEncoding("UTF-8");
@@ -78,18 +79,20 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
 		return viewResolver;
 	}
 	
-	//Cấu hình JPA
+	// Cấu hình JPA
+	// Cấu hình bean entityManager
 	@Bean
 	@Qualifier(value = "entityManager")
 	public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
 		return entityManagerFactory.createEntityManager();
 	}
 	
+	// Cấu hình entityManagerFactory
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 		em.setDataSource(dataSource());
-		em.setPackagesToScan("rikkei.academy.model");
+		em.setPackagesToScan("ra.model.entity");
 		
 		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		em.setJpaVendorAdapter(vendorAdapter);
@@ -97,16 +100,18 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
 		return em;
 	}
 	
+	// Cấu hình datasource kết nối với database
 	@Bean
 	public DataSource dataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://localhost:3306/bai7_th1");
+		dataSource.setUrl("jdbc:mysql://localhost:3306/feedback_nasa");
 		dataSource.setUsername("binh");
 		dataSource.setPassword("12345");
 		return dataSource;
 	}
 	
+	// Cấu hình transaction một cách tự động
 	@Bean
 	public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -114,6 +119,7 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
 		return transactionManager;
 	}
 	
+	// cấu hình cách kết nối hay tự động với hibernate
 	public Properties additionalProperties() {
 		Properties properties = new Properties();
 		properties.setProperty("hibernate.hbm2ddl.auto", "update");
@@ -121,18 +127,5 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
 		return properties;
 	}
 	
-	@Bean
-	ICustomerService customerService() {
-		return new CustomerServiceIMPL();
-	}
 	
-	@Bean
-	IProvinceService provinceService() {
-		return new ProvinceServiceIMPL();
-	}
-	
-	@Override
-	public void addFormatters(FormatterRegistry registry) {
-		registry.addFormatter(new ProvinceFormatter(applicationContext.getBean(ProvinceServiceIMPL.class)));
-	}
 }
