@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -21,6 +22,8 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import ra.model.formatter.CategoryFormatter;
+import ra.model.service.category.CategoryService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -125,6 +128,11 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 		properties.setProperty("hibernate.hbm2ddl.auto", "update");
 		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
 		return properties;
+	}
+	
+	@Override
+	public void addFormatters(FormatterRegistry registry) {
+		registry.addFormatter(new CategoryFormatter(applicationContext.getBean(CategoryService.class)));
 	}
 	
 }

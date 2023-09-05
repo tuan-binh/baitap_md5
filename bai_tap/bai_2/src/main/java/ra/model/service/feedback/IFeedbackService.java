@@ -14,5 +14,5 @@ public interface IFeedbackService {
 	
 	void like(Long id);
 	
-	Page<Feedback> findAll(Pageable pageable);
+	Page<Feedback> findAll(int page,int size);
 }

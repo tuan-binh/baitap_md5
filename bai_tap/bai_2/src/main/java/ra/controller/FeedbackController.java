@@ -16,8 +16,8 @@ public class FeedbackController {
 	private IFeedbackService feedbackService;
 	
 	@GetMapping
-	public String home(Model model, Pageable pageable) {
-		model.addAttribute("list", feedbackService.findAll(pageable));
+	public String home(Model model,@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "2") int size) {
+		model.addAttribute("list", feedbackService.findAll(page,size));
 		model.addAttribute("form", new Feedback());
 		return "home";
 	}

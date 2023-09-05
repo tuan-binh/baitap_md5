@@ -44,7 +44,7 @@
 	<span th:text="'Author: '+${c.author}"></span>
 	<span th:text="'Content: '+${c.content}"></span>
 	<th:block th:if="${c.likes}!=0">
-		<span th:text="'Like: '+${c.likes}"></span>
+		<span th:text="'Like: '+${c.likes}	"></span>
 	</th:block>
 	<a th:href="${c.id}"><button>Like</button></a>
 </div>

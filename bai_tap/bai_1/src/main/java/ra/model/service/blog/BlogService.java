@@ -2,11 +2,13 @@ package ra.model.service.blog;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ra.model.entity.Blog;
 import ra.model.repository.IBlogRepository;
 
 import java.awt.print.Pageable;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,13 +19,14 @@ public class BlogService implements IBlogService {
 	
 	
 	@Override
-	public Iterable<Blog> findAll() {
-		return blogRepository.findAll();
+	public List<Blog> findAll() {
+		return (List<Blog>) blogRepository.findAll();
 	}
 	
 	@Override
-	public Optional<Blog> findById(Long id) {
-		return blogRepository.findById(id);
+	public Blog findById(Long id) {
+		Optional<Blog> optionalBlog = blogRepository.findById(id);
+		return optionalBlog.orElse(null);
 	}
 	
 	@Override
@@ -37,12 +40,7 @@ public class BlogService implements IBlogService {
 	}
 	
 	@Override
-	public Page<Blog> findAll(Pageable pageable) {
-		return blogRepository.findAll((org.springframework.data.domain.Pageable) pageable);
-	}
-	
-	@Override
-	public Page<Blog> findAllTitleContaining(String title, Pageable pageable) {
-		return blogRepository.findAllByTitleContaining(title, (org.springframework.data.domain.Pageable) pageable);
+	public Page<Blog> findAll(int page, int size) {
+		return blogRepository.findAll(PageRequest.of(page,size));
 	}
 }

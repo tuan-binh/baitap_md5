@@ -1,17 +1,15 @@
 package ra.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ra.model.entity.Blog;
-import ra.model.entity.Category;
 import ra.model.service.blog.IBlogService;
 import ra.model.service.category.ICategoryService;
 
-import java.awt.print.Pageable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -25,38 +23,39 @@ public class BlogController {
 	private ICategoryService categoryService;
 	
 	@GetMapping
-	public ModelAndView listBlog(Pageable pageable) {
-		Page<Blog> blogs = blogService.findAll(pageable);
-		return new ModelAndView("blog/blogs", "blogs", blogs);
+	public String blogs(Model model,@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "2") int size) {
+		model.addAttribute("blogs",blogService.findAll(page,size));
+		int n = blogService.findAll().size() / size + ((blogService.findAll().size() % size == 0) ? 0 : 1);
+		List<Integer> pages = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			pages.add(i+1);
+		}
+		model.addAttribute("pages",pages);
+		return "blog/blogs";
 	}
 	
-	@GetMapping("/addNewBlog")
-	public String addNewBlog(Model model) {
-		List<Category> categories = (List<Category>) categoryService.findAll();
-		model.addAttribute("categories", categories);
-		model.addAttribute("blog", new Blog());
+	@GetMapping("/add")
+	public String add(Model model) {
+		model.addAttribute("blog",new Blog());
+		model.addAttribute("categories",categoryService.findAll());
 		return "blog/add";
 	}
 	
-	@PostMapping("/add")
+	@PostMapping("add")
 	public String handleAdd(@ModelAttribute Blog blog) {
 		blogService.save(blog);
 		return "redirect:/";
 	}
 	
 	@GetMapping("/detail/{id}")
-	public String detail(@PathVariable Long id, Model model) {
-		Blog blog = null;
-		if (blogService.findById(id).isPresent()) {
-			blog = blogService.findById(id).get();
-		}
-		model.addAttribute("blog", blog);
-		return "blog/detail";
+	public ModelAndView detail(@PathVariable Long id) {
+		return new ModelAndView("blog/detail","blog",blogService.findById(id));
 	}
 	
 	@GetMapping("/edit/{id}")
-	public ModelAndView edit(@PathVariable Long id) {
-		return new ModelAndView("blog/edit", "blog", blogService.findById(id).get());
+	public ModelAndView edit(@PathVariable Long id,Model model) {
+		model.addAttribute("categories",categoryService.findAll());
+		return new ModelAndView("blog/edit","blog",blogService.findById(id));
 	}
 	
 	@PostMapping("/edit")
@@ -66,7 +65,7 @@ public class BlogController {
 	}
 	
 	@GetMapping("/delete/{id}")
-	public String deleteBlog(@PathVariable Long id) {
+	public String delete(@PathVariable Long id) {
 		blogService.delete(id);
 		return "redirect:/";
 	}

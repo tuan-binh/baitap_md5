@@ -14,8 +14,8 @@ public class Category {
 	@Column(nullable = false)
 	private String name;
 	
-	@OneToMany(targetEntity = Blog.class)
-	private List<Blog> blogs;
+	@OneToMany(mappedBy = "category",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+	private List<Blog> blogs = new ArrayList<>();
 	
 	public Category() {
 	}

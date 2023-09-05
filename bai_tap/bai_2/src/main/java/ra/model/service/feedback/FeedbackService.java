@@ -2,12 +2,14 @@ package ra.model.service.feedback;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ra.model.entity.Feedback;
 import ra.model.repository.IFeedbackRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FeedbackService implements IFeedbackService {
@@ -17,12 +19,13 @@ public class FeedbackService implements IFeedbackService {
 	
 	@Override
 	public List<Feedback> findAll() {
-		return feedbackRepository.findAll();
+		return (List<Feedback>) feedbackRepository.findAll();
 	}
 	
 	@Override
 	public Feedback findById(Long id) {
-		return feedbackRepository.findById(id).get();
+		Optional<Feedback> optionalFeedback = feedbackRepository.findById(id);
+		return optionalFeedback.orElse(null);
 	}
 	
 	@Override
@@ -37,12 +40,12 @@ public class FeedbackService implements IFeedbackService {
 	
 	public void like(Long id) {
 		Feedback f = feedbackRepository.findById(id).get();
-		f.setLike(f.getLike() + 1);
+		f.setLikes(f.getLikes() + 1);
 		feedbackRepository.save(f);
 	}
 	
 	@Override
-	public Page<Feedback> findAll(Pageable pageable) {
-		return feedbackRepository.findAll(pageable);
+	public Page<Feedback> findAll(int page,int size) {
+		return feedbackRepository.findAll(PageRequest.of(page,size));
 	}
 }

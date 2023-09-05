@@ -1,5 +1,6 @@
 package ra.config;
 
+import groovy.transform.AnnotationCollector;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -33,6 +35,7 @@ import java.util.Properties;
 @EnableWebMvc
 @ComponentScan(basePackages = {"ra"})
 @EnableJpaRepositories("ra.model.repository")
+@EnableSpringDataWebSupport
 public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 	
 	private ApplicationContext applicationContext;
@@ -41,15 +44,6 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
-
-//	cấu hình viewResolver JSP
-//	@Bean
-//	public ViewResolver viewResolver() {
-//		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-//		resolver.setPrefix("/WEB-INF/views/");
-//		resolver.setSuffix(".jsp");
-//		return resolver;
-//	}
 	
 	//Cấu hình Thymleaf
 	@Bean
@@ -126,6 +120,5 @@ public class WebConfig implements WebMvcConfigurer, ApplicationContextAware {
 		properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
 		return properties;
 	}
-	
 	
 }

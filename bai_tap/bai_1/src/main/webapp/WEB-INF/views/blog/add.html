@@ -17,9 +17,11 @@
 			<td><input type="text" th:field="*{content}"></td>
 		</tr>
 		<tr>
-			<select th:field="*{category}">
-				<option th:each="cate:${categories}" th:value="${cate.id}" th:text="${cate.name}"></option>
-			</select>
+			<label>
+				<select th:field="*{category}">
+					<option th:each="cate:${categories}" th:value="${cate.id}" th:text="${cate.name}"></option>
+				</select>
+			</label>
 		</tr>
 		<tr>
 			<td colspan="2"><button type="submit">ADD</button></td>
