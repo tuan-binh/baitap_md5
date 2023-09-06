@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<a href="/create/product">Add New Product</a>
+<!--<form action="/create/product" method="post" th:object="${createProductForm}">-->
+<!--	<label>Name</label>-->
+<!--	<span style="color: red" th:if="${#fields.hasErrors('name')}" th:error="*{name}">The name must more than 2 and less than 10 and not required!</span>-->
+<!--	<input type="text" name="name" th:field="*{name}"><br>-->
+<!--	<label>Price</label>-->
+<!--	<span style="color: red" th:if="${#fields.hasErrors('price')}" th:error="*{price}">The price is more than 18</span>-->
+<!--	<input type="text" name="age" th:field="*{price}"><br>-->
+<!--	<button type="submit">Create</button>-->
+<!--</form>-->
+<table>
+	<thead>
+	<tr>
+		<th>STT</th>
+		<th>NAME</th>
+		<th>PRICE</th>
+		<th colspan="2">ACTIONS</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr th:each="item:${pageProduct}">
+		<th th:text="${item.id}"></th>
+		<td th:text="${item.name}"></td>
+		<td th:text="${item.price}"></td>
+	</tr>
+	</tbody>
+</table>
+</body>
+</html>
