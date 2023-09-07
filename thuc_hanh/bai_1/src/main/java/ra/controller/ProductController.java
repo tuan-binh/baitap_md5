@@ -19,6 +19,7 @@ public class ProductController {
 	
 	@Autowired
 	private IProductService productService;
+	
 	@GetMapping(value = {"/", "/product"})
 	public ModelAndView listProduct(@PageableDefault(sort = "name",size = 3) Pageable pageable){
 		Page<Product> productPage = productService.findAll(pageable);
@@ -26,12 +27,14 @@ public class ProductController {
 		modelAndView.addObject("pageProduct",productPage);
 		return modelAndView;
 	}
+	
 	@GetMapping("/create/product")
 	public ModelAndView showFormCreateProduct(){
 		ModelAndView modelAndView = new ModelAndView("/product/add");
 		modelAndView.addObject("createProductForm",new Product());
 		return modelAndView;
 	}
+	
 	@PostMapping("/create/product")
 	public String createProduct(@Validated @ModelAttribute("createProductForm") Product product, BindingResult bindingResult){
 		if(bindingResult.hasFieldErrors()){
@@ -40,10 +43,11 @@ public class ProductController {
 		productService.save(product);
 		return "redirect:/product";
 	}
+	
 	@GetMapping("/search")
 	public ModelAndView searchProduct(@RequestParam("search") String search, Pageable pageable){
 		Page<Product> productPage;
-		if(!search.trim().equals("")){
+		if(!search.trim().isEmpty()){
 			productPage = productService.findByNameProduct(search,pageable);
 		} else {
 			productPage = productService.findAll(pageable);
@@ -52,6 +56,5 @@ public class ProductController {
 		modelAndView.addObject("pageProduct",productPage);
 		return modelAndView;
 	}
-	
 	
 }

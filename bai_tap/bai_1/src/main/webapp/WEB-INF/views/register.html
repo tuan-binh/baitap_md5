@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+<form action="/register" method="post" th:object="${user}">
+	<table border="10" cellpadding="10" cellspacing="10">
+		<tr>
+			<td>Username:</td>
+			<td>
+				<input type="text" th:field="*{fullName}">
+				<span th:if="${#fields.hasErrors('fullName')}"
+							th:error="*{fullName}">Can you handle input fullName not Empty</span>
+			</td>
+		</tr>
+		<tr>
+			<td>Username:</td>
+			<td>
+				<input type="text" th:field="*{username}">
+				<span th:if="${#fields.hasErrors('username')}" th:error="*{username}">Can you handle input username more than 6 characters</span>
+			</td>
+		</tr>
+		<tr>
+			<td>Password:</td>
+			<td>
+				<input type="password" th:field="*{password}">
+				<span th:if="${#fields.hasErrors('password')}" th:error="*{password}">Can you handle input password more than 6 characters</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2"><a href="/">Sign In ?</a></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<button>Sign Up</button>
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>
